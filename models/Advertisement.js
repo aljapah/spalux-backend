@@ -36,15 +36,15 @@ const advertisementSchema = new mongoose.Schema({
   subCategory: {
     type: String,
     required: true,
-    enum: ['spa', 'cupping', 'beauty_clinic', 'mens_salon', 'womens_salon', 'home_services', 'body_care']
+    enum: ['spa', 'cupping', 'beauty_clinic', 'mens_salon', 'womens_salon', 'home_services', 'body_care', 'children_salon']
   },
-  
+
   governorate: {
     type: String,
     required: true,
-    enum: ['capital', 'ahmadi', 'farwaniya', 'jahra', 'mubarak_alkabeer', 'hawalli']
+    enum: ['capital', 'ahmadi', 'farwaniya', 'jahra', 'mubarak_al_kabeer', 'hawalli']
   },
-  
+
   socialMedia: {
     twitter: String,
     instagram: String,
@@ -53,7 +53,8 @@ const advertisementSchema = new mongoose.Schema({
     whatsapp: String,
     phone: String,
     website: String,
-    mapLink: String
+    mapLink: String,
+    tiktok: String
   },
   
   subscriptionEndDate: {
