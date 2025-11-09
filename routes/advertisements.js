@@ -12,7 +12,7 @@ const getKey = (str) =>
 
 router.get('/', async (req, res) => {
   try {
-    const baseUrl = process.env.BASE_URL || 'https://spalux-backend.onrender.com';
+    const baseUrl = process.env.BASE_URL;
 
     const { category, subCategory, governorate, limit = 50, skip = 0 } = req.query;
     
@@ -32,14 +32,14 @@ router.get('/', async (req, res) => {
     
     const total = await Advertisement.countDocuments(query);
     
+    const formatPath = (img) => {
+        if (img.startsWith('http')) return img;
+        return `${baseUrl}/${img.replace(/^\/?/, '')}`;
+    };
+
     const data = advertisements.map(ad => {
       const adObject = ad.toObject();
       
-      const formatPath = (img) => {
-          if (img.startsWith('http')) return img;
-          return `${baseUrl}/${img.replace(/^\/?/, '')}`;
-      };
-
       return {
         ...adObject,
         images: adObject.images.map(formatPath),
@@ -70,7 +70,7 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   try {
-    const baseUrl = process.env.BASE_URL || 'https://spalux-backend.onrender.com';
+    const baseUrl = process.env.BASE_URL;
     
     const advertisement = await Advertisement.findById(req.params.id);
     
@@ -115,7 +115,7 @@ router.get('/:id', async (req, res) => {
 
 router.get('/category/:category', async (req, res) => {
   try {
-    const baseUrl = process.env.BASE_URL || 'https://spalux-backend.onrender.com';
+    const baseUrl = process.env.BASE_URL;
 
     const { category } = req.params;
     const { governorate, subCategory } = req.query;
