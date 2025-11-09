@@ -35,26 +35,15 @@ router.get('/', async (req, res) => {
     const data = advertisements.map(ad => {
       const adObject = ad.toObject();
       
-      const formattedImages = adObject.images.map(img => {
-          if (img.startsWith('/uploads/') || img.startsWith('uploads/')) {
-              const filename = img.replace('/uploads/', '').replace('uploads/', '');
-              return `${baseUrl}/uploads/${filename}`;
-          }
-          return img; 
-      });
-
-      const formattedVideos = adObject.videos.map(vid => {
-          if (vid.startsWith('/uploads/') || vid.startsWith('uploads/')) {
-              const filename = vid.replace('/uploads/', '').replace('uploads/', '');
-              return `${baseUrl}/uploads/${filename}`;
-          }
-          return vid;
-      });
+      const formatPath = (img) => {
+          if (img.startsWith('http')) return img;
+          return `${baseUrl}/${img.replace(/^\/?/, '')}`;
+      };
 
       return {
         ...adObject,
-        images: formattedImages,
-        videos: formattedVideos,
+        images: adObject.images.map(formatPath),
+        videos: adObject.videos.map(formatPath),
         category_key: getKey(adObject.subCategory || adObject.category),
         socialMedia: {
             ...adObject.socialMedia,
@@ -94,26 +83,15 @@ router.get('/:id', async (req, res) => {
     
     const adObject = advertisement.toObject();
 
-    const formattedImages = adObject.images.map(img => {
-        if (img.startsWith('/uploads/') || img.startsWith('uploads/')) {
-            const filename = img.replace('/uploads/', '').replace('uploads/', '');
-            return `${baseUrl}/uploads/${filename}`;
-        }
-        return img; 
-    });
-
-    const formattedVideos = adObject.videos.map(vid => {
-        if (vid.startsWith('/uploads/') || vid.startsWith('uploads/')) {
-            const filename = vid.replace('/uploads/', '').replace('uploads/', '');
-            return `${baseUrl}/uploads/${filename}`;
-        }
-        return vid;
-    });
+    const formatPath = (img) => {
+        if (img.startsWith('http')) return img;
+        return `${baseUrl}/${img.replace(/^\/?/, '')}`;
+    };
 
     const data = {
       ...adObject,
-      images: formattedImages,
-      videos: formattedVideos,
+      images: adObject.images.map(formatPath),
+      videos: adObject.videos.map(formatPath),
       category_key: getKey(adObject.subCategory || adObject.category),
       socialMedia: {
           ...adObject.socialMedia,
@@ -154,29 +132,18 @@ router.get('/category/:category', async (req, res) => {
     const advertisements = await Advertisement.find(query)
       .sort({ displayOrder: -1, createdAt: -1 });
     
+    const formatPath = (img) => {
+        if (img.startsWith('http')) return img;
+        return `${baseUrl}/${img.replace(/^\/?/, '')}`;
+    };
+
     const data = advertisements.map(ad => {
         const adObject = ad.toObject();
         
-        const formattedImages = adObject.images.map(img => {
-            if (img.startsWith('/uploads/') || img.startsWith('uploads/')) {
-                const filename = img.replace('/uploads/', '').replace('uploads/', '');
-                return `${baseUrl}/uploads/${filename}`;
-            }
-            return img; 
-        });
-
-        const formattedVideos = adObject.videos.map(vid => {
-            if (vid.startsWith('/uploads/') || vid.startsWith('uploads/')) {
-                const filename = vid.replace('/uploads/', '').replace('uploads/', '');
-                return `${baseUrl}/uploads/${filename}`;
-            }
-            return vid;
-        });
-
         return {
             ...adObject,
-            images: formattedImages,
-            videos: formattedVideos,
+            images: adObject.images.map(formatPath),
+            videos: adObject.videos.map(formatPath),
             category_key: getKey(adObject.subCategory || adObject.category),
             socialMedia: {
                 ...adObject.socialMedia,
