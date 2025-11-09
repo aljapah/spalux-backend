@@ -32,25 +32,20 @@ router.get('/', async (req, res) => {
     const total = await Advertisement.countDocuments(query);
     
     const data = advertisements.map(ad => {
-      const adObject = ad.toObject();
+      const a = ad.toObject();
       return {
-        ...adObject,
-        images: adObject.images,
-        videos: adObject.videos,
-        category_key: getKey(adObject.subCategory || adObject.category),
+        ...a,
+        images: a.images,
+        videos: a.videos,
+        category_key: getKey(a.subCategory || a.category),
         socialMedia: {
-          ...adObject.socialMedia,
-          tiktok: adObject.socialMedia.tiktok || ''
+          ...a.socialMedia,
+          tiktok: a.socialMedia.tiktok || ''
         }
       };
     });
     
-    res.json({
-      success: true,
-      count: advertisements.length,
-      total,
-      data
-    });
+    res.json({ success: true, count: advertisements.length, total, data });
   } catch (error) {
     res.status(500).json({ success: false });
   }
@@ -58,29 +53,22 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   try {
-    const advertisement = await Advertisement.findById(req.params.id);
+    const ad = await Advertisement.findById(req.params.id);
+    if (!ad) return res.status(404).json({ success: false });
     
-    if (!advertisement) {
-      return res.status(404).json({ success: false });
-    }
-    
-    const adObject = advertisement.toObject();
-    
+    const a = ad.toObject();
     const data = {
-      ...adObject,
-      images: adObject.images,
-      videos: adObject.videos,
-      category_key: getKey(adObject.subCategory || adObject.category),
+      ...a,
+      images: a.images,
+      videos: a.videos,
+      category_key: getKey(a.subCategory || a.category),
       socialMedia: {
-        ...adObject.socialMedia,
-        tiktok: adObject.socialMedia.tiktok || ''
+        ...a.socialMedia,
+        tiktok: a.socialMedia.tiktok || ''
       }
     };
     
-    res.json({
-      success: true,
-      data
-    });
+    res.json({ success: true, data });
   } catch (error) {
     res.status(500).json({ success: false });
   }
@@ -104,24 +92,20 @@ router.get('/category/:category', async (req, res) => {
       .sort({ displayOrder: -1, createdAt: -1 });
     
     const data = advertisements.map(ad => {
-      const adObject = ad.toObject();
+      const a = ad.toObject();
       return {
-        ...adObject,
-        images: adObject.images,
-        videos: adObject.videos,
-        category_key: getKey(adObject.subCategory || adObject.category),
+        ...a,
+        images: a.images,
+        videos: a.videos,
+        category_key: getKey(a.subCategory || a.category),
         socialMedia: {
-          ...adObject.socialMedia,
-          tiktok: adObject.socialMedia.tiktok || ''
+          ...a.socialMedia,
+          tiktok: a.socialMedia.tiktok || ''
         }
       };
     });
     
-    res.json({
-      success: true,
-      count: advertisements.length,
-      data
-    });
+    res.json({ success: true, count: advertisements.length, data });
   } catch (error) {
     res.status(500).json({ success: false });
   }
