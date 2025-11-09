@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Advertisement = require('../models/Advertisement');
+const upload = require('../middleware/upload');
 
 const getKey = (str) =>
   str
@@ -10,15 +11,8 @@ const getKey = (str) =>
     .replace(/[^a-z0-9]/g, '_')
     .trim();
 
-const formatPath = (baseUrl, img) => {
-  if (typeof img !== 'string') return '';
-  if (img.startsWith('http')) return img;
-  return `${baseUrl}/${img.replace(/^\/+/, '')}`;
-};
-
 router.get('/', async (req, res) => {
   try {
-    const baseUrl = process.env.BASE_URL;
     const { category, subCategory, governorate, limit = 50, skip = 0 } = req.query;
     
     let query = { 
@@ -41,8 +35,8 @@ router.get('/', async (req, res) => {
       const adObject = ad.toObject();
       return {
         ...adObject,
-        images: adObject.images.map(img => formatPath(baseUrl, img)),
-        videos: adObject.videos.map(img => formatPath(baseUrl, img)),
+        images: adObject.images,
+        videos: adObject.videos,
         category_key: getKey(adObject.subCategory || adObject.category),
         socialMedia: {
           ...adObject.socialMedia,
@@ -64,7 +58,6 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   try {
-    const baseUrl = process.env.BASE_URL;
     const advertisement = await Advertisement.findById(req.params.id);
     
     if (!advertisement) {
@@ -75,8 +68,8 @@ router.get('/:id', async (req, res) => {
     
     const data = {
       ...adObject,
-      images: adObject.images.map(img => formatPath(baseUrl, img)),
-      videos: adObject.videos.map(img => formatPath(baseUrl, img)),
+      images: adObject.images,
+      videos: adObject.videos,
       category_key: getKey(adObject.subCategory || adObject.category),
       socialMedia: {
         ...adObject.socialMedia,
@@ -95,7 +88,6 @@ router.get('/:id', async (req, res) => {
 
 router.get('/category/:category', async (req, res) => {
   try {
-    const baseUrl = process.env.BASE_URL;
     const { category } = req.params;
     const { governorate, subCategory } = req.query;
     
@@ -115,8 +107,8 @@ router.get('/category/:category', async (req, res) => {
       const adObject = ad.toObject();
       return {
         ...adObject,
-        images: adObject.images.map(img => formatPath(baseUrl, img)),
-        videos: adObject.videos.map(img => formatPath(baseUrl, img)),
+        images: adObject.images,
+        videos: adObject.videos,
         category_key: getKey(adObject.subCategory || adObject.category),
         socialMedia: {
           ...adObject.socialMedia,
