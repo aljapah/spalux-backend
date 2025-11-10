@@ -3,13 +3,16 @@ const router = express.Router();
 const Advertisement = require('../models/Advertisement');
 const upload = require('../middleware/upload');
 
-const getKey = (str) =>
-  str
+const getKey = (str) => {
+  if (typeof str !== 'string' || !str) return ''; 
+  
+  return str
     .toLowerCase()
     .replace(/أ|إ/g, 'ا')
     .replace(/ة/g, 'ه')
     .replace(/[^a-z0-9]/g, '_')
     .trim();
+};
 
 router.get('/', async (req, res) => {
   try {
