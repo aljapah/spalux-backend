@@ -80,13 +80,7 @@ router.post('/advertisements', upload.fields([
     const uploadedImages = (req.files && req.files.images) ? req.files.images : [];
     const images = mapStoredFiles(uploadedImages);
     
-    // REMOVED: Image presence check to make images optional
-    // if (!images.length) {
-    //   return res.status(400).json({
-    //     success: false,
-    //     message: 'At least one image is required'
-    //   });
-    // }
+    // تم حذف شرط التحقق من الصور هنا لجعله اختيارياً (Merge Resolution)
 
     const uploadedVideos = (req.files && req.files.videos) ? req.files.videos : [];
     const videos = mapStoredFiles(uploadedVideos);
@@ -157,13 +151,6 @@ router.put('/advertisements/:id', upload.fields([
 
     const newImages = mapStoredFiles((req.files && req.files.images) ? req.files.images : []);
     const newVideos = mapStoredFiles((req.files && req.files.videos) ? req.files.videos : []);
-
-    // Assuming existingImages and existingVideos are strings of JSON arrays or comma-separated paths
-    // The parseJsonArray function needs to handle this correctly, but for simplicity,
-    // if they come from hidden fields in the form, they might just be comma-separated.
-    
-    // The previous implementation used parseJsonArray, which is correct for handling
-    // form data that might turn array-like data into JSON strings or simple strings.
 
     const existingImages = parseJsonArray(req.body.existingImages);
     const existingVideos = parseJsonArray(req.body.existingVideos);
